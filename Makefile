@@ -9,7 +9,7 @@ else
 endif
 
 package:
-	@ docker rmi microservice-authors
+	@ docker rmi -f microservice-authors
 	@ echo "Packaging authors project"
 	@ mvn clean package && rm -f authors.out
 
@@ -28,7 +28,7 @@ up: package
 
 down:
 	@ docker-compose stop && docker-compose rm -vf
-	@ rm -f ./nginx/config/proxy/*.conf
+	@ rm -f ./nginx/config/loadbalance/*.conf
 
 ssl:
 	@ mkdir -p nginx/certs

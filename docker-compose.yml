@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  proxy:
+  loadbalance:
     image: nginx:alpine
     command: /bin/sh -c "envsubst '$${NGINX_HOST} $${NGINX_SSL_PORT}' < /etc/nginx/conf.d/loadbalance.nginx > /etc/nginx/conf.d/loadbalance.conf && nginx -g 'daemon off;'"
     volumes:
