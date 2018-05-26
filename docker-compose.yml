@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  app:
+    image: microservice-authors
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_HOST=db
+    restart: on-failure
+    networks:
+      - authors_network
+  db:
+    image: mysql:5
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - authors_volume:/var/lib/mysql
+    networks:
+      - authors_network
+
+volumes:
+  authors_volume:
+
+networks:
+  authors_network:
