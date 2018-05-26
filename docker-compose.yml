@@ -4,22 +4,29 @@ services:
 
   proxy:
     image: nginx:alpine
-    command: /bin/sh -c "envsubst '$${APP_HOST} $${APP_PORT} $${NGINX_HOST} $${NGINX_SSL_PORT}' < /etc/nginx/conf.d/proxy.nginx > /etc/nginx/conf.d/proxy.conf && nginx -g 'daemon off;'"
+    command: /bin/sh -c "envsubst '$${NGINX_HOST} $${NGINX_SSL_PORT}' < /etc/nginx/conf.d/loadbalance.nginx > /etc/nginx/conf.d/loadbalance.conf && nginx -g 'daemon off;'"
     volumes:
-      - ./nginx/config/proxy/:/etc/nginx/conf.d/
+      - ./nginx/config/loadbalance/:/etc/nginx/conf.d/
       - ./nginx/certs/:/etc/nginx/certs/
     environment:
-      - APP_HOST=app
-      - APP_PORT=8080
       - NGINX_HOST=localhost
       - NGINX_SSL_PORT=8081
     ports:
       - "8080:80"
       - "8081:443"
     depends_on:
-      - app
+      - app1
+      - app2
 
-  app:
+  app2:
+    image: microservice-authors
+    environment:
+      - DATABASE_HOST=db
+    restart: on-failure
+
+    depends_on:
+      - db
+  app1:
     image: microservice-authors
     environment:
       - DATABASE_HOST=db
