@@ -7,10 +7,11 @@ services:
     command: /bin/sh -c "envsubst '$${APP_HOST}' < /etc/nginx/conf.d/proxy.nginx > /etc/nginx/conf.d/proxy.conf && nginx -g 'daemon off;'"
     volumes:
       - ./nginx/config/proxy/:/etc/nginx/conf.d/
+      - ./nginx/certs/:/etc/nginx/certs/
     environment:
       - "APP_HOST=app:8080"
     ports:
-      - "8080:80"
+      - "8080:443"
     depends_on:
       - app
 

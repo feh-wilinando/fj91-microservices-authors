@@ -1,15 +1,18 @@
 server {
+    listen 443 ssl;
 
-  location / {
-    proxy_pass http://${APP_HOST}/;
+    ssl_certificate /etc/nginx/certs/cert.crt;
+    ssl_certificate_key /etc/nginx/certs/cert.key;
 
-      proxy_set_header Host $host;
-      proxy_set_header X-Forwarded-For $remote_addr;
+    location / {
+        proxy_pass http://${APP_HOST}/;
 
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
 
-      gzip on;
-      gzip_types application/json application/text;
-      gzip_min_length 100;
-  }
+        gzip on;
+        gzip_types application/json application/text;
+        gzip_min_length 100;
+      }
 
 }
