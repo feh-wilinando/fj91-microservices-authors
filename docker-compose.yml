@@ -1,26 +1,34 @@
 version: '3'
 
 services:
+
+  proxy:
+    image: nginx:alpine
+    command: /bin/sh -c "envsubst '$${APP_HOST}' < /etc/nginx/conf.d/proxy.nginx > /etc/nginx/conf.d/proxy.conf && nginx -g 'daemon off;'"
+    volumes:
+      - ./nginx/config/proxy/:/etc/nginx/conf.d/
+    environment:
+      - "APP_HOST=app:8080"
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+
   app:
     image: microservice-authors
-    ports:
-      - "8080:8080"
     environment:
       - DATABASE_HOST=db
     restart: on-failure
-    networks:
-      - authors_network
+
+    depends_on:
+      - db
   db:
     image: mysql:5
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
       - authors_volume:/var/lib/mysql
-    networks:
-      - authors_network
+
 
 volumes:
   authors_volume:
-
-networks:
-  authors_network:

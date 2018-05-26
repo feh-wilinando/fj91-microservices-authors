@@ -1,0 +1,15 @@
+server {
+
+  location / {
+    proxy_pass http://${APP_HOST}/;
+
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-For $remote_addr;
+
+
+      gzip on;
+      gzip_types application/json application/text;
+      gzip_min_length 100;
+  }
+
+}

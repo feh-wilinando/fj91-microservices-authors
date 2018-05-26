@@ -28,3 +28,8 @@ up: package
 
 down:
 	@ docker-compose stop && docker-compose rm -vf
+	@ rm -f ./nginx/config/proxy/*.conf
+
+ssl:
+	@ mkdir -p nginx/certs
+	@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx/certs/cert.key -out ./nginx/certs/cert.crt
