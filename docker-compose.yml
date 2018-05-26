@@ -4,14 +4,18 @@ services:
 
   proxy:
     image: nginx:alpine
-    command: /bin/sh -c "envsubst '$${APP_HOST}' < /etc/nginx/conf.d/proxy.nginx > /etc/nginx/conf.d/proxy.conf && nginx -g 'daemon off;'"
+    command: /bin/sh -c "envsubst '$${APP_HOST} $${APP_PORT} $${NGINX_HOST} $${NGINX_SSL_PORT}' < /etc/nginx/conf.d/proxy.nginx > /etc/nginx/conf.d/proxy.conf && nginx -g 'daemon off;'"
     volumes:
       - ./nginx/config/proxy/:/etc/nginx/conf.d/
       - ./nginx/certs/:/etc/nginx/certs/
     environment:
-      - "APP_HOST=app:8080"
+      - APP_HOST=app
+      - APP_PORT=8080
+      - NGINX_HOST=localhost
+      - NGINX_SSL_PORT=8081
     ports:
-      - "8080:443"
+      - "8080:80"
+      - "8081:443"
     depends_on:
       - app
 
